@@ -1,12 +1,6 @@
-﻿using Domain.Data.Entities;
+﻿namespace Domain.Data;
 
-namespace Domain.Data;
-
-public interface IInMemoryRepository
+public interface IInMemoryRepository : IProductRepository
 {
-    Task<List<Product>> GetProductsAsync(string category);
-    Task<Product?> GetProductByIdAsync(int id);
-
-    List<Product> GetProducts(string category);
-    Product? GetProductById(int id);
+    
 }

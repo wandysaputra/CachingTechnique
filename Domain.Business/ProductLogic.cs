@@ -10,11 +10,13 @@ public class ProductLogic : IProductLogic
 {
     private readonly ILogger<ProductLogic> _logger;
     private readonly IInMemoryRepository _inMemoryRepository;
+    private readonly IDistributeCacheRepository _distributeCacheRepository;
 
-    public ProductLogic(ILogger<ProductLogic> logger, IInMemoryRepository inMemoryRepository)
+    public ProductLogic(ILogger<ProductLogic> logger, IInMemoryRepository inMemoryRepository, IDistributeCacheRepository distributeCacheRepository)
     {
         _logger = logger;
         _inMemoryRepository = inMemoryRepository;
+        _distributeCacheRepository = distributeCacheRepository;
     }
 
     public async Task<IEnumerable<ProductModel>> GetProductsForCategoryAsync(string category)
@@ -22,7 +24,8 @@ public class ProductLogic : IProductLogic
         _logger.LogInformation("Getting products in logic for {category}", category);
 
         Activity.Current?.AddEvent(new ActivityEvent("Getting products from repository"));
-        var products = await _inMemoryRepository.GetProductsAsync(category);
+        // var products = await _inMemoryRepository.GetProductsAsync(category);
+        var products = await _distributeCacheRepository.GetProductsAsync(category);
 
         var results = products.Select(ConvertToProductModel).ToList();
 
@@ -33,20 +36,23 @@ public class ProductLogic : IProductLogic
 
     public async Task<ProductModel?> GetProductByIdAsync(int id)
     {
-        var product = await _inMemoryRepository.GetProductByIdAsync(id);
+        // var product = await _inMemoryRepository.GetProductByIdAsync(id);
+        var product = await _distributeCacheRepository.GetProductByIdAsync(id);
         return product != null ? ConvertToProductModel(product) : null;
     }
 
     public IEnumerable<ProductModel> GetProductsForCategory(string category)
     {
-        var products =  _inMemoryRepository.GetProducts(category);
+        // var products =  _inMemoryRepository.GetProducts(category);
+        var products =  _distributeCacheRepository.GetProducts(category);
 
         return products.Select(ConvertToProductModel).ToList();
     }
 
     public ProductModel? GetProductById(int id)
     {
-        var product = _inMemoryRepository.GetProductById(id);
+        // var product = _inMemoryRepository.GetProductById(id);
+        var product = _distributeCacheRepository.GetProductById(id);
         return product != null ? ConvertToProductModel(product) : null;
     }
 

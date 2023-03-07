@@ -13,6 +13,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddMemoryCache();
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.InstanceName = "CachingTechnique";
+});
 
 builder.Logging.ClearProviders();
 
@@ -48,6 +53,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<LocalContext>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IInMemoryRepository, InMemoryRepository>();
+builder.Services.AddScoped<IDistributeCacheRepository, DistributeCacheRepository>();
 
 builder.Services.AddScoped<IProductLogic, ProductLogic>();
 

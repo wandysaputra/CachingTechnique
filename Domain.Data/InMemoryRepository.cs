@@ -19,7 +19,7 @@ public class InMemoryRepository : IInMemoryRepository
         var cacheKey = $"Products_{category}";
         if (_memoryCache.TryGetValue<List<Product>>(cacheKey, out var products))
         {
-            return products;
+            return products ?? new List<Product>();
         }
 
         products = await _productRepository.GetProductsAsync(category);

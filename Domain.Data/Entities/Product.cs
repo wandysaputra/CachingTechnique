@@ -1,4 +1,6 @@
-﻿namespace Domain.Data.Entities;
+﻿using System.Text.Json.Serialization;
+
+namespace Domain.Data.Entities;
 
 public class Product
 {
@@ -10,3 +12,13 @@ public class Product
     public string ImgUrl { get; set; } = null!;
     public ProductRating? Rating { get; set; }
 }
+
+[JsonSerializable(typeof(List<Product>))]
+public partial class CacheSourceGenerationContext : JsonSerializerContext
+{
+}
+
+//[JsonSerializable(typeof(Product))]
+//public partial class CacheSourceGenerationContext : JsonSerializerContext
+//{
+//}
