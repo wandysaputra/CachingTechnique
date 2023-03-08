@@ -69,4 +69,19 @@ public class InMemoryRepository : IInMemoryRepository
 
         return product;
     }
+
+    public async Task<Product?> AddNewProductAsync(Product product, bool invalidateCache)
+    {
+        var productCreated = await _productRepository.AddNewProductAsync(product, invalidateCache);
+        
+        if (!invalidateCache || productCreated == null)
+        {
+            return productCreated;
+        }
+
+        var cacheKey = $"Products_{product.Category}";
+        _memoryCache.Remove(cacheKey);
+
+        return productCreated;
+    }
 }

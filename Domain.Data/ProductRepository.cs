@@ -74,4 +74,13 @@ public class ProductRepository : IProductRepository
 
         return product;
     }
+
+    
+    public async Task<Product?> AddNewProductAsync(Product product, bool invalidateCache)
+    {
+        _ctx.Products.Add(product);
+        var resultSaveChange = await _ctx.SaveChangesAsync();
+
+        return resultSaveChange <= 0 ? null : product;
+    }
 }

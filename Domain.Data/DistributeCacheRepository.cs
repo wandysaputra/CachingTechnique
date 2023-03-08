@@ -127,4 +127,19 @@ public class DistributeCacheRepository : IDistributeCacheRepository
 
         return product;
     }
+
+    public async Task<Product?> AddNewProductAsync(Product product, bool invalidateCache)
+    {
+        var productCreated = await _productRepository.AddNewProductAsync(product, invalidateCache);
+        
+        if (!invalidateCache || productCreated == null)
+        {
+            return productCreated;
+        }
+
+        var cacheKey = $"products_{product.Category}";
+        await _distributedCache.RemoveAsync(cacheKey);
+
+        return productCreated;
+    }
 }
