@@ -15,6 +15,10 @@ Response Caching Restrictions
 - Not for server-side UI apps (Razor Pages, MVC)
 - Can for anonymous API call or static HTTP assets
 
+Example implementation => `[ResponseCache(Duration = 90, VaryByQueryKeys = new [] { "category" })]`
+![image](https://user-images.githubusercontent.com/42372928/223712179-443983cf-1ac8-45e1-b8a9-dbca0220e056.png)
+
+
 ## Output Caching
 
 Output Caching Restrictions
