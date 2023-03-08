@@ -1,11 +1,13 @@
 ﻿using Domain.Business;
 using Domain.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Domain.WebApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[AllowAnonymous]
 public class ProductController : ControllerBase
 {
     private readonly ILogger<ProductController> _logger;
@@ -19,6 +21,7 @@ public class ProductController : ControllerBase
 
 
     [HttpGet]
+    [ResponseCache(Duration = 90, VaryByQueryKeys = new [] { "category" })]
     public async Task<IEnumerable<ProductModel>> Get(string category = "all")
     {
         using (_logger.BeginScope("ScopeCat: {ScopeCat}", category))
