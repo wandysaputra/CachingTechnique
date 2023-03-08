@@ -12,6 +12,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddResponseCaching();
+builder.Services.AddOutputCache(options =>
+{
+    options.DefaultExpirationTimeSpan = TimeSpan.FromMinutes(5);
+});
 builder.Services.AddMemoryCache();
 builder.Services.AddStackExchangeRedisCache(options =>
 {
@@ -78,6 +82,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseResponseCaching();
+app.UseOutputCache();
 app.MapFallback(() => Results.Redirect("/swagger"));
 
 app.UseHttpsRedirection();
